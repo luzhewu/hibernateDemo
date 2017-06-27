@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="HibernateTest Maven Webapp"
+  id="myeclipse.1498481789145"
+  context-root="/HibernateTest"
+  j2ee-spec="1.7"
+  archive="HibernateTest Maven Webapp.war">
+  <attributes>
+    <attribute name="webrootdir" value="src/main/webapp" />
+  </attributes>
+</project-module>
+
