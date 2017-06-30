@@ -30,8 +30,8 @@ PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
 	<!-- 配置我们的currentSession -->
 	<property name="current_session_context_class">thread</property>
 	
-	<!-- 加载我们的mapping映射文件，全路径 -->
-	<property name="myeclipse.connection.profile">Oracle</property>
+	
 	<mapping resource="cn/bdqn/bean/Student.hbm.xml" />
+	<mapping resource="cn/bdqn/bean/Dept.hbm.xml" />
 </session-factory>
 </hibernate-configuration>
