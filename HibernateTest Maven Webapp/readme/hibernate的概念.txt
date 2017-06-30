@@ -1,0 +1,115 @@
+hibernate:持久层的框架！
+ 是一个开放源代码的对象关系映射框架(ORM)！以前访问数据库使用JDBC！
+ hibernate对JDBC进行了轻量级的对象封装！是一个全自动ORM框架！（底层可以自动生成sql语句）
+ 使用面向对象的思想来操作数据库
+ 
+hibernate 核心的
+	1个类:Configuration  对核心配置文件的读取
+	5个接口：
+		01、SessionFactory:复制初始化hibernate需要的参数！在程序中有一个就够了！之后我们会写成单例模式！
+		02、Session:不是我们的HttpSession(用户Session)！我们的hibernate的session
+			是用来操作对象(增删改查)！创建事物的对象！我们现在使用的session不是线程安全的！
+		03、Transaction:进行事务的操作
+		04、Query:hibernate中查询的接口(sql、hql)
+		05、Criteria:和Query相似！但是做了一些封装！
+
+Student 实体类
+Student.hbm.xml   mapping映射文件
+
+hibernate.cfg.xml:整个hibernate框架的核心配置文件！
+	01、管理mapping文件
+	02、整个hibernate环境的配置
+	03、连接数据库的四要素
+	
+sql的四种语言：
+	DDL:数据定义语言
+		create alter drop truncate
+	DML:数据操作语言
+		select insert update delete
+	DCL:数据控制语言
+		grant revoke
+	TCL:事务控制语言
+		savepoint commit rollback (begin transaction)
+		
+hbm2ddl属性值:
+  	01、create:每次运行都会删除上次生成的表!
+  	02、update:没有表会自动创建，如果有，就新增数据!字段不一致，
+  		会按照hbm.xml文件中column属性值，在数据库中新增一列
+  	03、validate:不会自动创建表，如果表存在，会新增数据！字段不一致，会抛出异常，说出数据库中没有该字段
+  	04、create-drop:每次运行都删除上次生成的表！sessionFactory关闭的时候，数据库中的表也会删除！
+  	<property name="hbm2ddl.auto">update</property>
+  	
+主键生成策略：
+	01、assigned:主键生成的值由用户决定，与底层数据库没有关系！
+				在调用session.save()之前，必须给主键赋值，否则会抛出异常！
+	02、sequence:oracle支持的逐渐生成策略！hibernate会从数据库中取得当前序列的下一个值赋给主键！
+						不需要我们手动给主键赋值！
+			<generator class="sequence">
+				<param name="sequence">sq_student_id</param>
+			</generator>
+			底层生成的sql语句
+				select sq_student_id.nextval from dual
+	03、identity:针对MySQL数据库的主键自增
+	04、increment:默认会在数据库中查询对应表中主键的最大值，(select max(id) from student),之后把值给主键！
+			<generator class="increment"/>
+
+lazy="true" 是默认采用懒加载的方式！获取数据！
+	不想使用懒加载！ 设置lazy="false"
+<class name="Student" table="STUDENT" lazy="false"><class>	
+	
+hibernate对象的三种状态：
+	01、瞬时状态(临时状态/自由状态)
+		我们通过new关键字，创建出的一个实体对象！和hibernate没有任何关系！
+	02、持久状态
+		对象正在被session管理，数据库中有对象对应的数据！
+		如果对象是持久状态！那么对它的修改操作，不需要再使用其它的方法(update)
+		在commit的时候，会执行flush(),
+		在flush()的时候会进行缓存清理！
+		缓存清理的时候进行脏检查！
+		如果对象的属性和之前的对象属性不一致！
+		那么当前的对象就是脏对象！
+		就会把脏对象同步到数据库！
+	03、游离状态(托管状态)
+		曾经被session管理过！和瞬时状态的区别是 是否存在OID(主键标识符)!
+		
+/**save、update、saveOrUpdate、merge的对比：
+	 * save():把瞬时状态转换成 持久状态
+	 * update():把游离状态转换成持久状态
+	 * saveOrUpdate():
+	 * 		会根据持久化对象的主键标识符赖皮and阿U呢是save()还是update()
+	 * 			如果没有old，证明是瞬时状态，就执行save();
+	 * 			如果有old，证明是游离状态，就执行update();
+	 * merge():虽然和saveOrUpdate()产生的sql结果一致！
+	 * 		但是：
+	 * 			01、merge()不会改变对象的状态！
+	 * 			02、当对象处于瞬时状态的时候，会将对象赋值一份到session的缓存中，
+	 * 				执行save()，产生insert()语句！
+	 * 		我们认为产生了insert语句，student就变成了持久化对象！其实不是！
+	 * 		只不过是session缓存中的对象发生了变化！
+	 */
+	 
+flush和commit的区别！
+	相同点：两者都会同步到数据库！
+	不同点：
+		commit：永久保存！commit-->flush()-->缓存清理-->脏检查
+		flush:不会永久保存！
+			01、是执行缓存清理工作！
+			02、会把缓存中的对象同步到数据库中！但是不会保存！
+			03、确保缓存中的数据，和数据库中的数据一致！
+
+缓存清理机制：
+	在我们执行flush()的时候，会清理session中的数据！
+	在清理缓存的时候，会执行脏检查！
+脏检查:
+	在对象被session管理的时候！
+		01、session会在缓存中创建出对象的快照保存现在对象的一个状态以及属性！(a对象)
+		02、在清理缓存的时候会把现在对象的属性和(a对象)进行比对！
+		03、如果发现现在的对象和(a对象)不一致！那么现在的队I型昂就称之为脏对象)！
+		04、flush()会把这个脏对象同步到数据库！但是不会保存！只是暂时的！
+		05、之后commit的时候，才能永久保存数据！
+
+Query接口中的list()和iterator()都可以执行查询操作；
+	而iterator()能够利用延迟加载和缓存的机制提高查询性能！iterator()查询时，
+	仅查询id字段以节省资源。需要使用数据时，再根据id字段到缓存中检索匹配的实例！
+	如果存在就直接使用！只有当缓存中没有需要的数据时，iterator()才会执行select语句！
+	根据id字段到数据库中查询！iterator()更适用于查询对象开启二级缓存的情况！

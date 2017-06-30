@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<!-- 映射文件  M  目的：实体类和数据库中的表产生关系
+package: 我们需要映射的实体类的包名
+class name : 对应的实体类的名称(如果省略了package属性，必须书写全类名)
+property,id name: 对应的是实体类中的属性名，如果和数据库中字段一致，则可以省略column -->
+<hibernate-mapping package="cn.bdqn.bean">
+	<class name="Student" table="STUDENT" lazy="false">
+		<id name="id">
+			<!-- 主键生成策略
+			assigned:主键的生成完全由用户决定，与底层数据库无关。
+			在调用session.save()之前必须指定主键值，否则会抛出异常！ -->
+			<generator class="assigned"/>
+		</id>
+		<!-- 配置其他属性的映射 -->
+		<property name="age"/>
+		<property name="name" column="sname"/>
+	</class>
+	
+</hibernate-mapping>
