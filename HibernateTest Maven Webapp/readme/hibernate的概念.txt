@@ -73,20 +73,20 @@ hibernate对象的三种状态：
 		曾经被session管理过！和瞬时状态的区别是 是否存在OID(主键标识符)!
 		
 /**save、update、saveOrUpdate、merge的对比：
-	 * save():把瞬时状态转换成 持久状态
-	 * update():把游离状态转换成持久状态
-	 * saveOrUpdate():
-	 * 		会根据持久化对象的主键标识符赖皮and阿U呢是save()还是update()
-	 * 			如果没有old，证明是瞬时状态，就执行save();
-	 * 			如果有old，证明是游离状态，就执行update();
-	 * merge():虽然和saveOrUpdate()产生的sql结果一致！
-	 * 		但是：
-	 * 			01、merge()不会改变对象的状态！
-	 * 			02、当对象处于瞬时状态的时候，会将对象赋值一份到session的缓存中，
-	 * 				执行save()，产生insert()语句！
-	 * 		我们认为产生了insert语句，student就变成了持久化对象！其实不是！
-	 * 		只不过是session缓存中的对象发生了变化！
-	 */
+  save():把瞬时状态转换成 持久状态
+  update():把游离状态转换成持久状态
+  saveOrUpdate():
+  		会根据持久化对象的主键标识符赖皮and阿U呢是save()还是update()
+  			如果没有old，证明是瞬时状态，就执行save();
+  			如果有old，证明是游离状态，就执行update();
+  merge():虽然和saveOrUpdate()产生的sql结果一致！
+  		但是：
+  			01、merge()不会改变对象的状态！
+  			02、当对象处于瞬时状态的时候，会将对象赋值一份到session的缓存中，
+  				执行save()，产生insert()语句！
+  		我们认为产生了insert语句，student就变成了持久化对象！其实不是！
+  		只不过是session缓存中的对象发生了变化！
+ /
 	 
 flush和commit的区别！
 	相同点：两者都会同步到数据库！
@@ -113,3 +113,14 @@ Query接口中的list()和iterator()都可以执行查询操作；
 	仅查询id字段以节省资源。需要使用数据时，再根据id字段到缓存中检索匹配的实例！
 	如果存在就直接使用！只有当缓存中没有需要的数据时，iterator()才会执行select语句！
 	根据id字段到数据库中查询！iterator()更适用于查询对象开启二级缓存的情况！
+	
+
+cascade属性:定义的是关系两端，对象到对象的级联关系！
+ 	必须是双向的一对多关联！
+  常用的属性值：
+  	01、none:默认值！当session操作当前对象的时候，忽略关联的属性！
+  	02、save-update:当session调用save，saveOrUpdate以及update的时候！
+  					会级联的保存和修改当前对象以及对象关联的属性！
+  			001、去区县的xml文件中的bag节点增加cascade属性！
+  	03、delete:当session调用delete()的时候。会级联删除所关联的对象！
+  	04、all:包括了save-update和delete

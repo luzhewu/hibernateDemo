@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping package="cn.bdqn.bean">
+	<class name="Street">
+		<id name="id">
+			<generator class="assigned"/>
+		</id>
+		<property name="name"/>
+		<!-- 配置多对一关联
+		name:对应的是本类中 关联关系的属性名
+		column:对应数据库中两个表的外键！
+		class:关联的实体类 -->
+		<many-to-one name="district" column="districtId" class="District"/>
+	</class>
+</hibernate-mapping>
