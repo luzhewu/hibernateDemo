@@ -15,4 +15,45 @@
 		class:关联的实体类 -->
 		<many-to-one name="dept" column="DEPTNO" class="Dept"/>
 	</class>
+	
+	<!-- HQL命名查询，语句要卸载CDATA中 -->
+	<query name="fromEmp">
+		<![CDATA[
+			from Emp
+		]]>
+	</query>
+	
+	<!-- sql命名查询
+		001、如果查询的是所有数据，那么前台接受的时候必须是数组
+		002、投影查询的时候？查询一个属性的时候是object对象，多个就是object数组
+		003、如果还想把结果集封装成对象，就得使用 
+			query.setResultTransFormer(Transformers.aliasToBean(Emp.class)) -->
+	<sql-query name="sqlFromEmp">
+		<![CDATA[
+			select * from emp
+		]]>
+	</sql-query>
+	
+	<!-- 查询指定的一个对象的姓名 -->
+	<sql-query name="selectName">
+		<![CDATA[
+			select empName from emp where empNo=:id
+		]]>
+	</sql-query>
+	
+	<!-- 查询指定的一个对象的姓名和薪水 -->
+	<sql-query name="selectNameAndSal">
+		<return-scalar column="empName"/>
+		<!-- type属性:类型，如果不写，Hibernate会自动检测。可以写Java中类的全名或是写hibernate类型
+			因为我们数据库中的salary是float类型，无法自动映射，需要我们手动的设置匹配！
+			empNo是number类型，无法自动映射也需要我们手动的设置匹配！
+			java.lang.Integer:java的全类名，也可以写成hibernate类型的int
+			double:hibernate类型
+		 -->
+		 <return-scalar column="empNo" type="java.lang.Integer"/>
+		 <return-scalar column="salary" type="double"/>
+		 <![CDATA[
+		 	select empName,empNo,salary from emp where empNo=:id
+		 ]]>
+	</sql-query>
 </hibernate-mapping>
