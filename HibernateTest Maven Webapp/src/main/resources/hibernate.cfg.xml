@@ -35,5 +35,6 @@ PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
 	<mapping resource="cn/bdqn/bean/Dept.hbm.xml" />
 	<mapping resource="cn/bdqn/bean/Street.hbm.xml" />
 	<mapping resource="cn/bdqn/bean/District.hbm.xml" />
+	<mapping resource="cn/bdqn/bean/Emp.hbm.xml" />
 </session-factory>
 </hibernate-configuration>

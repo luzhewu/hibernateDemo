@@ -3,11 +3,18 @@
 <hibernate-mapping package="cn.bdqn.bean">
 	<class name="Dept">
 		<id name="deptno">
-			<generator class="sequence">
-				<param name="sequence">sq_student_id</param>
-			</generator>
+			<generator class="assigned"/>
 		</id>
 		<property name="loc"/>
 		<property name="dname"/>
+		<!-- 设置一对多
+		name:本类中的关联属性名，集合的名称
+		column:就是数据库表中的外键
+		order-by="id desc" 按照街道的id进行降序排列
+		inverse:是由谁来维护表与表之间的关系！默认是false(维护) -->
+		<set name="emps" cascade="all" inverse="true">
+			<key column="DEPTNO"/>
+			<one-to-many class="Emp"/>
+		</set>
 	</class>
 </hibernate-mapping>
