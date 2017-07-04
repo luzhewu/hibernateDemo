@@ -30,6 +30,8 @@ PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
 	<!-- 配置我们的currentSession -->
 	<property name="current_session_context_class">thread</property>
 	
+	<!-- 卡其查询缓存 -->
+	<property name="cache.use_query_cache">true</property>
 	
 	<mapping resource="cn/bdqn/bean/Student.hbm.xml" />
 	<mapping resource="cn/bdqn/bean/Dept.hbm.xml" />
