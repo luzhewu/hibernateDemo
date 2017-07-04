@@ -2,6 +2,9 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping package="cn.bdqn.bean">
 	<class name="Emp">
+		<!-- 配置2级缓存策略 -->
+		<cache usage="read-only"/>
+	
 		<id name="empNo">
 			<generator class="assigned"/>
 		</id>
@@ -56,4 +59,5 @@
 		 	select empName,empNo,salary from emp where empNo=:id
 		 ]]>
 	</sql-query>
+	
 </hibernate-mapping>
